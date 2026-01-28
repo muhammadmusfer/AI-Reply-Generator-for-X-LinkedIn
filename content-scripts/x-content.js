@@ -117,11 +117,21 @@
           const composeArea = toolbar.closest('div[role="group"]') || toolbar.parentElement.parentElement;
           const targetInput = composeArea.querySelector(X_SELECTORS.replyInput);
 
+          const typeResponse = async (text) => {
+             if (targetInput.tagName === 'TEXTAREA' || targetInput.tagName === 'INPUT') {
+                targetInput.select();
+             } else if (targetInput.isContentEditable) {
+                targetInput.focus();
+                document.execCommand('selectAll', false, null);
+             }
+             await DomUtils.simulateTyping(targetInput, text);
+          };
+
           if (config.autoInsert) {
-            DomUtils.insertText(targetInput, response.reply);
+            await typeResponse(response.reply);
           } else {
-            UIInjector.showPreviewModal(response.reply, (finalText) => {
-              DomUtils.insertText(targetInput, finalText);
+            UIInjector.showPreviewModal(response.reply, async (finalText) => {
+               await typeResponse(finalText);
             });
           }
         } else {

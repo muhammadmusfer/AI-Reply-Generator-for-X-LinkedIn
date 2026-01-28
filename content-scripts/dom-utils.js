@@ -72,6 +72,46 @@ const DomUtils = {
       // Dispatch input event to ensure listeners catch the change
       element.dispatchEvent(new Event('input', { bubbles: true }));
     }
+  },
+
+  async simulateTyping(element, text) {
+    if (!element) return;
+    element.focus();
+
+    // Random delay before starting to type (mimic thinking time)
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 500 + 500));
+
+    // If it's contentEditable, we might want to clear it first if we are replacing
+    // But for now, let's assume we are just typing at the cursor or appending.
+    // However, the original usage was mostly "generate reply", so it likely replaces.
+    // Let's clear selection first if we want to replace, but manual typing usually implies 
+    // the user deleted it or we are typing into an empty box.
+    // For safety with the current flow (which replaces or appends), let's just type.
+    // The caller should handle clearing if needed. 
+    
+    // actually existing insertText handled "select all" for replace.
+    // let's follow that pattern if we want to replace.
+    // But `simulateTyping` implies just typing.
+    
+    for (const char of text) {
+      if (element.tagName === 'TEXTAREA' || element.tagName === 'INPUT') {
+        const start = element.selectionStart;
+        const end = element.selectionEnd;
+        const val = element.value;
+        element.value = val.substring(0, start) + char + val.substring(end);
+        element.selectionStart = element.selectionEnd = start + 1;
+        element.dispatchEvent(new Event('input', { bubbles: true }));
+      } else if (element.isContentEditable) {
+         document.execCommand('insertText', false, char);
+      }
+      
+      // Random delay between keystrokes (human-like)
+      // vary between 30ms and 100ms
+      const delay = Math.random() * 70 + 30;
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+    
+    element.dispatchEvent(new Event('change', { bubbles: true }));
   }
 };
 

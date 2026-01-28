@@ -265,11 +265,22 @@
         if (response && response.success) {
           const config = await StorageManager.getConfig();
           
+          const typeResponse = async (text) => {
+             // Select all text to mimic "replace" behavior
+             if (input.tagName === 'TEXTAREA' || input.tagName === 'INPUT') {
+                input.select();
+             } else if (input.isContentEditable) {
+                input.focus();
+                document.execCommand('selectAll', false, null);
+             }
+             await DomUtils.simulateTyping(input, text);
+          };
+
           if (config.autoInsert) {
-            DomUtils.insertText(input, response.reply);
+            await typeResponse(response.reply);
           } else {
-            UIInjector.showPreviewModal(response.reply, (finalText) => {
-              DomUtils.insertText(input, finalText);
+            UIInjector.showPreviewModal(response.reply, async (finalText) => {
+              await typeResponse(finalText);
             });
           }
         } else {
