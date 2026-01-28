@@ -1,10 +1,15 @@
 :root {
-  --primary-color: #0a66c2;
+  --primary-color: #70b5f9; /* Lighter blue for dark mode visibility */
+  --primary-hover: #9acbff;
   --secondary-color: #1d9bf0;
-  --text-color: #333;
-  --bg-color: #f9f9f9;
-  --border-color: #ddd;
-  --success-color: #28a745;
+  --text-color: #e6e6e6; /* Off-white text */
+  --text-muted: #aaa;
+  --bg-color: #121212; /* Deep black/grey background */
+  --card-bg: #1e1e1e;
+  --border-color: #333;
+  --input-bg: #2c2c2c;
+  --success-color: #4cd964;
+  --error-color: #ff5f5f;
 }
 
 body {
@@ -34,20 +39,29 @@ header h1 {
 
 .subtitle {
   font-size: 12px;
-  color: #666;
+  color: var(--text-muted);
   margin: 4px 0 0 0;
 }
 
 section {
   margin-bottom: 20px;
+  background-color: var(--card-bg); /* Slight separation for sections if desired, or keep flat */
+  padding: 0; 
+  /* If you want card style sections:
+  padding: 12px; 
+  border-radius: 8px; 
+  border: 1px solid var(--border-color); 
+  */
 }
 
 h3 {
   font-size: 14px;
   margin-bottom: 10px;
-  color: #555;
+  color: #fff; /* Brighter header */
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 4px;
 }
 
 .form-group {
@@ -58,16 +72,25 @@ label {
   display: block;
   font-size: 13px;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  color: #ddd;
 }
 
 select, input[type="text"], input[type="password"], textarea {
   width: 100%;
-  padding: 8px;
+  padding: 10px; /* Slightly larger touch/click area */
   border: 1px solid var(--border-color);
-  border-radius: 4px;
+  border-radius: 6px;
   box-sizing: border-box;
   font-size: 13px;
+  background-color: var(--input-bg);
+  color: #fff;
+  transition: border-color 0.2s;
+}
+
+select:focus, input:focus, textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
 }
 
 textarea {
@@ -81,12 +104,18 @@ textarea {
 }
 
 #togglePassword {
-  background: none;
+  background: var(--input-bg);
   border: 1px solid var(--border-color);
-  border-radius: 4px;
-  padding: 0 8px;
+  border-radius: 6px;
+  padding: 0 10px;
   cursor: pointer;
   font-size: 11px;
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+#togglePassword:hover {
+  background-color: #383838;
 }
 
 .radio-group {
@@ -98,24 +127,26 @@ textarea {
   font-weight: normal;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   cursor: pointer;
+  color: var(--text-color);
 }
 
 .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-weight: normal;
   cursor: pointer;
+  color: var(--text-color);
 }
 
 #charCount {
   display: block;
   text-align: right;
   font-size: 11px;
-  color: #888;
-  margin-top: 2px;
+  color: var(--text-muted);
+  margin-top: 4px;
 }
 
 footer {
@@ -127,10 +158,10 @@ footer {
 }
 
 .primary-btn {
-  background-color: var(--primary-color);
+  background-color: #0a66c2; /* Keep button blue but ensure contrast */
   color: white;
   border: none;
-  padding: 10px;
+  padding: 12px;
   border-radius: 20px;
   font-weight: 600;
   cursor: pointer;
@@ -138,7 +169,7 @@ footer {
 }
 
 .primary-btn:hover {
-  background-color: #004182;
+  background-color: var(--primary-color); /* Lighten on hover */
 }
 
 #statusMessage {
@@ -153,5 +184,5 @@ footer {
 }
 
 #statusMessage.error {
-  color: #dc3545;
+  color: var(--error-color);
 }

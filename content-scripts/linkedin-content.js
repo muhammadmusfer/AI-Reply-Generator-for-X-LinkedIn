@@ -193,7 +193,7 @@
          
          if (bestCandidate) {
             postContainer = bestCandidate;
-            console.warn('Using Blind Scrape fallback container:', postContainer);
+            console.log('Using general container discovery (Blind Scrape active):', postContainer);
          }
       }
 
@@ -231,11 +231,21 @@
          postContent.text = postTextEl.innerText.trim();
       } else {
          // Fallback: Grab all text from container
-         console.warn('Specific text selector failed. Using generic container text.');
-         // cleanup the text a bit to remove the comment box text itself if possible
-         let rawText = postContainer.innerText;
+         console.log('Using fallback text extraction (Standard selectors did not match).');
+         
+         // specific cleanup for raw text to remove UI noise
+         const rawLines = postContainer.innerText.split('\n');
+         const cleanLines = rawLines.filter(line => {
+            const l = line.trim();
+            // Filter out common UI noise or short stats
+            if (l.length < 3) return false; 
+            if (['Like', 'Comment', 'Share', 'Send', 'Reply', 'Repost'].includes(l)) return false;
+            return true;
+         });
+
+         let rawText = cleanLines.join('\n');
          // Remove "Comment" or button text if it appears at the end
-         if (rawText.length > 2000) rawText = rawText.substring(0, 2000);
+         if (rawText.length > 3000) rawText = rawText.substring(0, 3000);
          postContent.text = rawText;
       }
       
